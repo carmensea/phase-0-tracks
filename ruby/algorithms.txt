@@ -1,0 +1,11 @@
+-Turn on Netflix
+-Pick a new show to watch
+  -When show ends:
+    -if you want to continue
+      -press next episode
+    -if not
+      -press stop watching
+  -if you have 12 hours to kill
+    -watch all seasons
+  -Otherwise:
+    -turn off Netflix
