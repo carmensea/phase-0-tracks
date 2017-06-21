@@ -1,3 +1,14 @@
+Release 0
+
+-Receive floor instructions from owner (they will be in brail)
+-Enter elevator when doors open
+-Turn around and face doors
+  -Extend hand to touch buttons
+  -Feel for the number owner gave you
+  -Press button
+
+
+Release 1: Find a Real-Life Algorithm
 -Turn on Netflix
 -Pick a new show to watch
   -When show ends:
