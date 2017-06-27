@@ -38,3 +38,9 @@
 
  "How many times does the letter 'a' appear in this string?".count("a")
 # => 4
+ 
+#Real Method Calls
+ 
+ "Here is my ransom note".swapcase
+ "There are some disapp".chop
+ "Unless you give me ".ljust(24, "money")
