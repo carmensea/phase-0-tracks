@@ -23,20 +23,10 @@ while counter <= number_employees.to_i - 1
   condition = true
   
   #Conditonal to Booleans
-  wants_garlic = wants_garlic == "yes" ? true : false
-  wants_healthcare = wants_healthcare == "yes" ? true : false
-  
-  if current_year - (birth_year.to_i + 1) == age || current_year - (birth_year.to_i) == age
-    age = true
-  else
-    age = false
-  end
-
-  if name == "Drake Cula" || name == "Tu Fang"
-    name = false
-  else
-    name = true
-  end
+  wants_garlic = wants_garlic == "yes" 
+  wants_healthcare = wants_healthcare == "yes" 
+  age = (current_year - (birth_year.to_i + 1) == age || current_year - (birth_year.to_i) == age)
+  name = name == "Drake Cula" || name == "Tu Fang" 
 
   while condition
     puts "Please list any allergies one at a time. Please type done when finished"
@@ -51,35 +41,22 @@ while counter <= number_employees.to_i - 1
 
   #Survey yields results
   if age && (wants_garlic || wants_healthcare) 
-    result = "low"
+    result = "Probably not a vampire"
   end
 
-  if !age && (!wants_garlic || !wants_healthcare)
-    result = "medium"
+  if vampire || (!age && (!wants_garlic || !wants_healthcare))
+    result = "Probably a vampire"
   end
 
   if !age && (!wants_garlic && !wants_healthcare)
-    result = "high"
-  end
-
-  if !name 
-    result = "higher"
-  end
-
-  if vampire
-    result = "medium"
-  end
-
-  #Result updated for user 
-  if result == "low"
-    result = "Probably not a vampire"
-  elsif result == "medium"
-    result = "Probably a vampire"
-  elsif result == "high"
     result = "Almost certainly a vampire"
-  elsif result == "higher"
+  end
+
+  if name 
     result = "Definitely a vampire"
-  else
+  end
+
+  if result == nil
     result = "Results inconclusive"
   end
   
