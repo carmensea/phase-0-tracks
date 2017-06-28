@@ -29,7 +29,7 @@
  "The mystery of the missing first letter".slice(0)
 # => "he mystery of the missing first letter"
 
- "Elementary,    my   dear        Watson!".strip!
+ "Elementary,    my   dear        Watson!".squeeze!
 # => "Elementary, my dear Watson!"
 
  "z".bytes
