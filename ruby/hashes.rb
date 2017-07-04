@@ -1,40 +1,38 @@
-def questions
-  #initialize empty hash
-  details = {}
-  
-  #surveys client
-  puts "Client name?"
-  #adds key and value to hash
-  details[:name] = gets.chomp
-  puts "Client age?"
-  details[:age] = gets.chomp
-  puts "Number of children?"
-  details[:kid_total] = gets.chomp.to_i
-  puts "Decor theme?"
-  details[:theme] = gets.chomp
-  puts "Likes earth tones?"
-  details[:earth_tones] = gets.chomp
+#method that asks users preferences and stores them in a hash
+def survey
+  profile = {}
+  puts "Name"
+  profile[:name] = gets.chomp
+  puts "Address"
+  profile[:address] = gets.chomp
+  puts "Email"
+  profile[:email] = gets.chomp
+  puts "Phone"
+  profile[:phone] = gets.chomp
+  puts "Favorite shade of blue?"
+  profile[:fav_shade] = gets.chomp
+  puts "Wallpaper preference?"
+  profile[:wallpaper] = gets.chomp
+  puts "Ombre is?"
+  profile[:ombre] = gets.chomp
 
-  #prints the key and value
-  p details
-  
-  #prompts user for any updates
-  puts "Would you like to update any of you choices? Type 'none' if not."
-  input = gets.chomp
-
-  if input == "none"
-    p details
-  else
-    #prompts user for update value
-    puts "What is the update?"
-    update = gets.chomp
-    #takes input and changes it to a symbol, then takes update value to 
-    #update the value.
-    details[input.to_sym] = update
-  end
-
-  p details
-
+  profile
 end
 
-questions
+#method that updates hash with new label
+def update_add_val(hash)
+  puts "Please specify a label you'd like to update, otherwise type 'none.'"
+  update = gets.chomp
+  
+  if update  == "none"
+    p hash
+  else
+    puts "Please update #{update}"
+    new_value = gets.chomp
+    hash[update.to_sym] = new_value
+  end
+  hash
+end
+
+#Call update_add_val method with survey method's return value (the profile hash)
+p update_add_val(survey)  
