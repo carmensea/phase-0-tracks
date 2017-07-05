@@ -1,53 +1,68 @@
 require 'pry'
+#Prompt user for name
 
-#Change all vowels to the next vowel
-#Changle all consonants to the next consonant
-
-
-def alphabet
-  alphabet = {
+#method for all letters and catch alls.
+def letterbank
+  {
     vowels: ["a","e","i","o","u"],
     cap_vowels: ["A","E","I","O","U"],
-    consonants: ["b","c","d","f","g","h","k","l","m",
-                  "n","p","q","r","s","t","v","w","x",
-                  "y","z"],
-    cap_consonants: ["B","C","D","F","G","H","J",
-                  "K","L","M","N","P","Q","R","S","T","V",
-                  "W","X","Y","Z"]
+    consonants: ["b","c","d","f","g","h","j","k","l","m",
+                 "n","p","q","r","s","t","v","w","x","y","z"],
+    cap_consonants: ["B","C","D","F","G","H","J","K","L","M",
+                     "N","P","Q","R","S","T","V","W","X","Y","Z"],
+    catch_all: [" ", "@", ".", "-"]
   }
-  alphabet
 end
 
+#Prompt user for name
 def name_taker
-  puts "What is your name?"
-  real_name = gets.chomp
-  name_array = real_name.split('')
-  name_array
+  condition = false
+  alias_history = {}
+  until condition
+    puts "What is your name?"
+    input = gets.chomp
+    if input == "quit"
+      condition = true
+      break
+    else
+      new_name = swapper(input)
+      alias_history[input] = new_name.join
+    end
+  end
+  sentence_maker(alias_history)
 end
 
-def swaperoo(name_array)
+def sentence_maker(hash)
+  hash.each do |real, fake|
+    puts "#{real} is your real name, and #{fake} is your alias."
+  end
+  hash
+end
+
+
+def swapper(name)
+  #for cycling through each type of key
+  letter_type = [:vowels, :cap_vowels, :consonants, :cap_consonants, :catch_all]
+  #for storing new name letters
   new_name = []
-  
-  letter_types = [:vowels, :cap_vowels, :consonants, :cap_consonants]
+  #for cycling through each letter
+  name_array = name.split('')
 
   name_array.each do |letter|
-    letter_types.each do |type|
-      if letter == alphabet[type][-1]
-        new_name.push(alphabet[type][0])
+    letter_type.each do |type|
+      if letter == letterbank[type][-1]
+        new_name.push(letterbank[type][0])
         break
-      elsif letter == " "
-        new_name.push(" ")
-        break
-      elsif alphabet[type].include?(letter)
-        new_position = alphabet[type].index(letter)+1
-        new_name.push(alphabet[type][new_position])
+      elsif letterbank[type].include?(letter)
+        new_letter_position = letterbank[type].index(letter)+1
+        new_name.push(letterbank[type][new_letter_position])
         break
       end
     end
   end
-  new_name = new_name.join
+  new_name
 end
 
-binding.pry
-p swaperoo(name_taker)
 
+binding.pry
+p name_taker
