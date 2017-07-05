@@ -13,10 +13,6 @@ def print_supplies(array)
   end
 end
 
-<<<<<<< HEAD
-# 2. Create a method to see if a particular item (string) is in the
-# zombie_apocalypse_supplies using #each.
-=======
 # 2. In order to keep yourself organized, sort your zombie_apocalypse_supplies
 # in alphabetical order. Do not use any special built-in methods.
 # ----
@@ -48,8 +44,6 @@ end
 
 # 3. Create a method to see if a particular item (string) is in the
 # zombie_apocalypse_supplies. Do not use any special built-in methods.
->>>>>>> 969a5488c2287cfe06a06a5feb57736938c14286
-# For instance: are boots in your list of supplies?
 # ----
 def check_if(array, string)
   #loop thru each item in array
@@ -71,9 +65,6 @@ end
 # leaving only 5, using #each.
 # ----
 
-<<<<<<< HEAD
-# 4. You found another survivor! This means you can combine your supplies.
-=======
 def carry_only(array, number)
   until array.length <= number
     if array.length > number
@@ -84,8 +75,7 @@ def carry_only(array, number)
 end
 #p carry_only(zombie_apocalypse_supplies, 5)
 
-# 5. You found another survivor! This means you can combine your supplies.
->>>>>>> 969a5488c2287cfe06a06a5feb57736938c14286
+# 4. You found another survivor! This means you can combine your supplies.
 # Create a new combined supplies list out of your zombie_apocalypse_supplies
 # and their supplies below. You should get rid of any duplicate items.
 # Find the built-in method that helps you accomplish this in the Ruby
