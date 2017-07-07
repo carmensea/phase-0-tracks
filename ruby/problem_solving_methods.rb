@@ -1,22 +1,21 @@
 require 'pry'
 
-def search_for(array, integer)
-  answer = ""
-  array.length.times do |position|
-    value = array[position]
-    if value == integer
-      answer = "#{integer} is in the array"
-      break
-    else
-      answer = "#{integer} is not in array"
+def sort(arr, integer)
+  #nil if the integer is not in array
+  val = nil
+  #look through each item of array
+  arr.length.times do |position|
+  #check if integer matches any item
+    if arr[position] == integer
+      #returns index if in array
+      val = position
     end
   end
- p answer
+  val
 end
 
-#array_numbers = [1,2,4,5]
-
-#search_for(array_numbers, 4)
+#arr = [1,2,3,4,5,12]
+#p sort(arr, 34)
 
 def fib(number)
   #need an empty array to put numbers into
