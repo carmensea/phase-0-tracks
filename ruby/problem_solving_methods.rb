@@ -1,53 +1,41 @@
-require "pry"
+require 'pry'
 
-# Release 0
-def search_array(array, number)
-  position = nil
-  array.length.times do |index|
-    # Check array[index] == number
-    position = index if array[index] == number
+def search_for(array, integer)
+  answer = ""
+  array.length.times do |position|
+    value = array[position]
+    if value == integer
+      answer = "#{integer} is in the array"
+      break
+    else
+      answer = "#{integer} is not in array"
+    end
   end
-  return position
+ p answer
 end
 
-# p search_array([1,2,3,4,5],10)
+#array_numbers = [1,2,4,5]
 
-# Release 1
-def fibonacci(number)
-  # Create an Array
-  # Fill array with Fibonacci sequence
-  #   Push sum of array[i], array[i+1]
-  fibonacci_sequence = []
-  first = 0
-  second = 1 
-  fibonacci_sequence.push(first, second)
-  #  for i in 2..number do
-  #  fibonacci_sequence.push(first + second)
-  i = 2
-  while i < number do
-    sum = first + second
-    fibonacci_sequence.push(sum)
-    temporary = second
-    first = temporary
-    second = sum 
-    i += 1
-  end 
-  fibonacci_sequence
+#search_for(array_numbers, 4)
+
+def fib(number)
+  #need an empty array to put numbers into
+  array = []
+  #for the numbers leading up to the given number
+  for i in 0..number-1
+    if i == 0
+      array.push(0)
+    elsif i == 1
+      array.push(1)
+    else
+      array.push(array[i-2] + array[i-1])
+    end
+  end
+  array
 end
 
-#p fibonacci(6)
-#p fibonacci(100)[-1] == 21892299583455516902
+p fib(1)
 
-#Release 2 
-
-#Given an array of integers
-#Compare first two integers
-#   if I2 < I1
-#   move I1 to array[0]
-# Compare array[1] to array[2]
-#   if I3 < I1
-#   move I3 to array[1]
-#[5,4,25,1])
 def insertion_sort(array)
   #initialize new array
   new_array = []
