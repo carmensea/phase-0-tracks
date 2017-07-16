@@ -9,64 +9,100 @@ class Hangman
     @counter = string.length
     @guess_history = []
     @letter_array = @word.split("")
-    @correct_letters = setter(@letter_array)
+    @correct_letters = set_answer_bank(@letter_array)
+  end
+  
+  def display_answer
+    string = ""
+    @correct_letters.each do |letter|
+      string += "#{letter} "
+    end
+    string
   end
 
   #setting up new array
-  def setter(array)
+  def set_answer_bank(array)
     @correct_letters = []
     #each letter goes into
     array.each do |letter|
       #value of key is a dash
-      @correct_letters.push("-")
+      @correct_letters.push("_")
     end
     @correct_letters
+  end
+
+  def guess(letter)
+    if @letter_array.include?(letter)
+      record_right_letter(letter)
+      true
+    else
+      if !same_wrong_guess?(letter)
+        record_wrong_letter(letter)
+      end
+      false
+    end
   end
 
   def position(letter)
     @letter_array.each_index.select{ |i| @letter_array[i] == letter}
   end
+  
+  def record_right_letter(letter)
+    positions = position(letter)
+    positions.each do |other|
+      @correct_letters[other] = letter 
+    end
+    true
+  end
 
-  #letter loop
-  def guess(letter)
-    if @letter_array.include?(letter)
-      positions = position(letter)
-      if positions.length == 1 
-        @correct_letters[positions[0]] = letter
-        puts "You guessed the correct letter!"
-        p @correct_letters
-      elsif positions.length > 1
-        positions.each do |other|
-          @correct_letters[other] = letter 
-        end
-        puts "You guessed correctly!"
-        p @correct_letters
-      end
+  def record_wrong_letter(letter)
+    @guess_history.push(letter)
+    @counter -= 1
+    true
+  end
+
+  def same_wrong_guess?(letter) 
+    if @guess_history.include?(letter)
+      true
     else
-      if @guess_history.include?(letter)
-        puts "Sorry, you guessed #{letter} already. Try again"
-      else
-        @guess_history.push(letter)
-        @counter -= 1
-        puts "Sorry, #{letter} is not a letter in the word."
-        puts "You now have #{@counter} guesses left"
-      end
+      false
     end
   end
-  
-  def start
-    puts "Cranking up the game..."
-    until @counter == 0 || @correct_letters == @letter_array
-      puts "Guess a letter"
-      letter = gets.chomp
-      guess(letter)
-    end
+
+  def complete?
+    @counter == 0 || @correct_letters == @letter_array
   end
 end
 
-#game = Hangman.new("zoo")
-#game.start
+def driver_code
+  game = Hangman.new("zoom")
+  p game.display_answer
+  until game.complete?
+    puts "guess a letter"
+    letter = gets.chomp
+    if game.guess(letter)
+      puts "Great job."
+    else
+      puts "Sorry, you guessed the wrong letter"
+      if game.same_wrong_guess?(letter)
+        puts "You already guess this one. This won't count against you."
+      end
+      puts "You have #{game.counter} guesses left."
+    end
+    p game.display_answer
+  end
+  
+  if @correct_letters == @letter_array
+    p game.display_answer
+    puts "You guessed #{game.correct_letters.join}, the correct word!"
+    true
+  else
+    puts "You're a failure."
+    false
+  end
+end
 
+#driver_code
 #Given a word
 #For each letter in the array
   #a - will be returned to p2
