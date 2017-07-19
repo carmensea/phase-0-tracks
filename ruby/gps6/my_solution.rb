@@ -1,8 +1,16 @@
 
 # Virus Predictor
 
-# I worked on this challenge [by myself, with: ].
-# We spent [#] hours on this challenge.
+# I worked on this challenge [by myself, with: Melissa].
+# We spent[1] hours on this challenge.
+# 1. The 2 differences between the hash syntaxes are using the hashrocket
+# and using the symbol.
+# 2. You can iterate through a hash using .each and then iterating through the key
+# and the values
+# 3. What stood out about the variables was that they were repetitive. They were instance
+# variables. You don't need instance variables in your parameters. 
+# 4. I had no idea that you could treat a hash as an array. I learned that you can 
+# give the .each method one value and it will treat it as one array. 
 
 # EXPLANATION OF require_relative
 # 
