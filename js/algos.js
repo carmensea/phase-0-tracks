@@ -44,18 +44,6 @@ function sameValues(object1, object2){
 //do this integer amount of times
 
 function wordMaker(integer){
-  var array = [];
-  var alphabet = "abcdefghijklmnopqrstuvwxyz";
-  var newWord = "";
-  for (var i = 0; i < integer; i++){
-    var wordLength = Math.floor(Math.random() * (10-1) +1 );
-    newWord = alphabet.substring(wordLength);
-    array.push(newWord);
-  }
-  return array;
-}
-
-function wordMaker(integer){
   //create empty array to return
   var array = [];
   //alphabet 
@@ -77,13 +65,23 @@ function wordMaker(integer){
   return array;
 }
 
-wordMaker(3)
+//add driver code that does the following 10 times: generates an array, prints the array, feeds the array to your "longest word" function, and prints the result.
 
-console.log(wordMaker(3))
+var arrFeeder = ""
+for (var i = 0; i < 10; i++){
+  arrFeeder = wordMaker(5);
+  console.log(arrFeeder);
+  longestWord(arrFeeder);
+}
 
-console.log(sameValues({name: "Steven", age: 54}, {name: "Tamir", age: 54}));
-console.log(sameValues({name: "Mark", age: 54}, {name: "Mark", age: 50}));
-console.log(sameValues({name: "Tim", age: 54}, {name: "Tamir", age: 154}));
+//RELEASE DRIVER CODES BELOW>>>>
+//wordMaker(3)
+
+//console.log(wordMaker(3))
+//
+//console.log(sameValues({name: "Steven", age: 54}, {name: "Tamir", age: 54}));
+//console.log(sameValues({name: "Mark", age: 54}, {name: "Mark", age: 50}));
+//console.log(sameValues({name: "Tim", age: 54}, {name: "Tamir", age: 154}));
 
 //console.log(longestWord(["ak", "monters", "catdogmousepeople", "cats", "chickkahfihdgsihgi"]));
 //console.log(longestWord(["a", "ab", "abcde", "e"]));
