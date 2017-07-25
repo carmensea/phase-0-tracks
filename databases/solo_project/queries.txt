@@ -17,3 +17,12 @@
           WHERE name = "Roxy";
    Output: No output
 
+Release 3:
+
+SELECT students.name, students.age, instructors.name
+FROM students
+JOIN instructors ON instructors.id = students.instructor_id;
+
+SELECT students.name, students.flexible
+FROM students
+JOIN instructors on instructors.id = students.instructor_id;
