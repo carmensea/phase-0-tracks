@@ -1,0 +1,19 @@
+1. Input: SELECT * FROM students;
+   Output: 
+      1|Kevin|27|false|1
+      2|Roxy|26|true|2
+      3|Saroo|49|true|2
+2. Input:  UPDATE students SET instructor_id =1 WHERE name = "Saroo";
+   Output: No output
+3. Input: SELECT * FROM students, instructors WHERE students.instructor_id = instructors.id; 
+   Output: 1|Kevin|27|false|1|1|Carmen|24|10
+           2|Roxy|26|true|2|2|Mogli|35|7
+           3|Saroo|49|true|1|1|Carmen|24|10
+4. Input: SELECT students.name, instructors.name FROM students JOIN instructors ON students.instructor_id = instructors.id;
+   Output: Kevin|Carmen
+           Roxy|Mogli
+           Saroo|Carmen
+5. Input: DELETE FROM students
+          WHERE name = "Roxy";
+   Output: No output
+
