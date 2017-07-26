@@ -1,0 +1,17 @@
+2.
+SELECT users.firstname, users.lastname, businesses.name, reviews.stars, reviews.comment
+FROM reviews
+JOIN businesses ON businesses.id = reviews.business_id
+JOIN users on users.id = reviews.user_id;
+
+3. 
+SELECT users.firstname, businesses.name, reviews.stars, reviews.comment
+FROM reviews 
+JOIN businesses ON businesses.id = reviews.business_id
+JOIN users on users.id = reviews.user_id;
+
+4. 
+SELECT businesses.name, reviews.stars, reviews.comment
+FROM reviews
+JOIN businesses ON reviews.business_id = businesses.id  
+WHERE businesses.id = 1;
