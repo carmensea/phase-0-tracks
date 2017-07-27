@@ -5,6 +5,7 @@ require 'faker'
 
 #create SQLite3 database
 db = SQLite3::Database.new("phonebook.db")
+db.results_as_hash = true
 
 #create a create command in SQL
 create_table_cmd = <<-SQL
@@ -32,7 +33,7 @@ def update_phone(db, name, update)
 end
 
 def delete_person(db, name)
-  db.execute("DELETE name, age, phone FROM phonebook WHERE name='#{name}'")
+  db.execute("DELETE FROM phonebook WHERE name='#{name}'")
 end
 
 def array_maker(db, information)
@@ -51,9 +52,6 @@ def add_person(db, name, age, phone)
   db.execute("INSERT INTO phonebook (name, age, phone) VALUES (?, ?, ?)", [name, age, phone])
 end
 
-def return_user(db, name)
-  db.execute("SELECT name, age, phone from phonebook WHERE name ='#{name}'")
-end
 
 #10.times do
 #  create_people(db, Faker::Name.name, Faker::Number.between(19, 90), Faker::Number.number(10))
@@ -62,36 +60,51 @@ end
 #DRIVER CODE
 
 #Ask user if they want to make a change to their contacts?
-puts "Would you like to make a change?"
-input = gets.chomp
-if input == "yes"
-  puts "What would you like to do (add/delete/update)?"
-  do_this = gets.chomp
-    if do_this == "update"
-      puts "Whom would you like to update?"
-      name_input = gets.chomp
-      puts "What would you like to update?"
-      field = gets.chomp
-      puts "What would you like to update #{field} to?"
-      update = gets.chomp
-        if field == "age"
-          update_age(db, name_input, update)
-          puts return_user(db, name_input)
-        elsif field == "phone number"
-          update_phone(db, name_input, update)
-          puts return_user(db, name_input)
+condition = false 
+until condition
+  puts "Would you like to make a change?"
+  input = gets.chomp
+  if input == "yes"
+    update_condition = false
+    until update_condition 
+      puts "What would you like to do (add/delete/update)?"
+      do_this = gets.chomp
+        if do_this == "update"
+          update_condition = true
+          puts "Whom would you like to update?"
+          name_input = gets.chomp
+          puts "What would you like to update?"
+          field = gets.chomp
+          puts "What would you like to update #{field} to?"
+          update = gets.chomp
+            if field == "age"
+              update_age(db, name_input, update)
+              return_user =  db.execute("SELECT * from phonebook WHERE name =?", name_input)
+              puts "#{return_user[0][1]} is #{return_user[0][2]} and the phone number is #{return_user[0][3]}"
+            elsif field == "phone number"
+              update_phone(db, name_input, update)
+              puts return_user(db, name_input)
+            end
+        elsif do_this == "delete"
+          update_condition = true
+          puts "Whom would you like to delete?"
+          name_input = gets.chomp
+          delete_person(db, name_input)
+        elsif do_this == "add"
+          update_condition = true
+          puts "Please give me the name, age, and phone number of the addition (separated by commas)."
+          addition = gets.chomp
+          array_maker(db, addition)
+        else 
+          puts "I didn't understand you. What change do you want to make?"
         end
-    elsif do_this == "delete"
-      puts "Whom would you like to delete?"
-      name_input = gets.chomp
-      delete_person(db, name_input)
-    elsif do_this == "add"
-      puts "Please give me the name, age, and phone number of the addition (separated by commas)."
-      addition = gets.chomp
-      array_maker(db, addition)
     end
-else
-  puts "Great! Glad I could help!"
+  elsif input == "no"
+    puts "Great! Glad I could help!"
+    condition = true
+  else 
+    puts "I didn't understand you. Please answer 'yes' or 'no'"
+  end
 end
 
 
