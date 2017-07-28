@@ -1,7 +1,7 @@
 #Operate Store Phone Numbers
-
 require 'sqlite3'
 require 'faker'
+
 
 #create SQLite3 database
 db = SQLite3::Database.new("phonebook.db")
@@ -52,6 +52,21 @@ def add_person(db, name, age, phone)
   db.execute("INSERT INTO phonebook (name, age, phone) VALUES (?, ?, ?)", [name, age, phone])
 end
 
+def actual_contact(db, name)
+  if db.execute("SELECT * from phonebook WHERE name =?", name)
+    true
+  else
+    false
+  end
+end
+
+def start_phonebook(input)
+  if input == "yes"
+    true 
+  else
+    false
+  end
+end
 
 #10.times do
 #  create_people(db, Faker::Name.name, Faker::Number.between(19, 90), Faker::Number.number(10))
@@ -60,11 +75,11 @@ end
 #DRIVER CODE
 
 #Ask user if they want to make a change to their contacts?
-condition = false 
-until condition
+done_changes = false 
+until done_changes
   puts "Would you like to make a change?"
   input = gets.chomp
-  if input == "yes"
+  if start_phonebook(input)
     update_condition = false
     until update_condition 
       puts "What would you like to do (add/delete/update)?"
@@ -73,6 +88,12 @@ until condition
           update_condition = true
           puts "Whom would you like to update?"
           name_input = gets.chomp
+          if !actual_contact(db, name_input) 
+            puts "I'm sorry, we don't have #{name_input} in the phonebook}. Would you like to add them or try again? ('add' 'try again')"
+            answer = gets.chomp
+            if answer == add
+              
+            end
           puts "What would you like to update?"
           field = gets.chomp
           puts "What would you like to update #{field} to?"
