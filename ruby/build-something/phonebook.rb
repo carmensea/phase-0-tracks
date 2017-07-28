@@ -95,11 +95,23 @@ def return_all(db)
   end
 end
 
+def in_database(db, name_input)
+  all_users = db.execute("SELECT * FROM phonebook")
+  all_users.each do |user, info|
+    if user['name'] == name_input
+     return true
+    else
+      return false
+    end
+  end
+end
+
 #set condition 
 done_changes = false 
 #Until the user says they are done making changes
 until done_changes
 #Ask user if they want to make a change to their contacts?
+  return_all(db)
   puts "Would you like to make a change?"
   input = gets.chomp
     if !start_phonebook(input)
@@ -118,22 +130,30 @@ until done_changes
                 if do_this == "update"
                   puts "Whom would you like to update?"
                   name_input = gets.chomp
-                  puts "What would you like to update?"
-                  field = gets.chomp
-                  puts "What would you like to update #{field} to?"
-                  update = gets.chomp
-                    if field == "age"
-                      update_age(db, name_input, update)
-                      puts return_user(db, name_input)
-                    elsif field == "phone number"
-                      update_phone(db, name_input, update)
-                      puts return_user(db, name_input)
+                    if in_database(db, name_input)
+                      puts "What would you like to update?"
+                      field = gets.chomp
+                      puts "What would you like to update #{field} to?"
+                      update = gets.chomp
+                        if field == "age"
+                          update_age(db, name_input, update)
+                          puts return_user(db, name_input)
+                        elsif field == "phone number"
+                          update_phone(db, name_input, update)
+                          puts return_user(db, name_input)
+                        end
+                    else
+                      puts "I'm sorry, that name is not in our database."
                     end
                 elsif do_this == "delete"
                   puts "Whom would you like to delete?"
                   name_input = gets.chomp
-                  delete_person(db, name_input)
-                  return_all(db)
+                  if in_database(db, name_input)
+                    delete_person(db, name_input)
+                    return_all(db)
+                  else
+                    puts "I'm sorry, that name doesn't exist"
+                  end
                 elsif do_this == "add"
                   puts "Please give me the name, age, and phone number of the addition (separated by commas)."
                   addition = gets.chomp
