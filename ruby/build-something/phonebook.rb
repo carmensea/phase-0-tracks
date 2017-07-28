@@ -36,11 +36,6 @@ def delete_person(db, name)
   db.execute("DELETE FROM phonebook WHERE name='#{name}'")
 end
 
-def array_maker(db, information)
-  info_array = information.split(',')
-  info_parser(db, info_array)
-end
-
 def info_parser(db, array)
   name = array[0]
   age = array[1]
@@ -60,9 +55,24 @@ def actual_contact(db, name)
   end
 end
 
+#is user making a change?
 def start_phonebook(input)
   if input == "yes"
     true 
+  elsif input == "no"
+    true
+  else 
+    false
+  end
+end
+
+def change_to_make(input)
+  if input == "add"
+    true
+  elsif input == "delete"
+    true
+  elsif input == "update"
+    true
   else
     false
   end
@@ -73,59 +83,76 @@ end
 #end
 
 #DRIVER CODE
+def return_user(db, name_input)
+  user = db.execute("SELECT * from phonebook WHERE name =?", name_input)
+  puts "#{user[0][1]} is #{user[0][2]} and the phone number is #{user[0][3]}"
+end
 
-#Ask user if they want to make a change to their contacts?
-done_changes = false 
-until done_changes
-  puts "Would you like to make a change?"
-  input = gets.chomp
-  if start_phonebook(input)
-    update_condition = false
-    until update_condition 
-      puts "What would you like to do (add/delete/update)?"
-      do_this = gets.chomp
-        if do_this == "update"
-          update_condition = true
-          puts "Whom would you like to update?"
-          name_input = gets.chomp
-          if !actual_contact(db, name_input) 
-            puts "I'm sorry, we don't have #{name_input} in the phonebook}. Would you like to add them or try again? ('add' 'try again')"
-            answer = gets.chomp
-            if answer == add
-              
-            end
-          puts "What would you like to update?"
-          field = gets.chomp
-          puts "What would you like to update #{field} to?"
-          update = gets.chomp
-            if field == "age"
-              update_age(db, name_input, update)
-              return_user =  db.execute("SELECT * from phonebook WHERE name =?", name_input)
-              puts "#{return_user[0][1]} is #{return_user[0][2]} and the phone number is #{return_user[0][3]}"
-            elsif field == "phone number"
-              update_phone(db, name_input, update)
-              puts return_user(db, name_input)
-            end
-        elsif do_this == "delete"
-          update_condition = true
-          puts "Whom would you like to delete?"
-          name_input = gets.chomp
-          delete_person(db, name_input)
-        elsif do_this == "add"
-          update_condition = true
-          puts "Please give me the name, age, and phone number of the addition (separated by commas)."
-          addition = gets.chomp
-          array_maker(db, addition)
-        else 
-          puts "I didn't understand you. What change do you want to make?"
-        end
-    end
-  elsif input == "no"
-    puts "Great! Glad I could help!"
-    condition = true
-  else 
-    puts "I didn't understand you. Please answer 'yes' or 'no'"
+def return_all(db)
+  all_users = db.execute("SELECT * FROM phonebook")
+  all_users.each do |user, info|
+    puts "#{user['name']} is #{user['age']} and the phone number is #{user['phone']}"
   end
 end
 
+#set condition 
+done_changes = false 
+#Until the user says they are done making changes
+until done_changes
+#Ask user if they want to make a change to their contacts?
+  puts "Would you like to make a change?"
+  input = gets.chomp
+    if !start_phonebook(input)
+      puts "I didn't understand you"
+    elsif start_phonebook(input)
+        if input == "no"
+          puts "Glad I could help!"
+          done_changes = true
+        else
+          second_condition = false
+          until second_condition 
+            puts "What would you like to do (add/delete/update)?"
+            do_this = gets.chomp
+            if change_to_make(do_this)
+              second_condition = true
+                if do_this == "update"
+                  puts "Whom would you like to update?"
+                  name_input = gets.chomp
+                  puts "What would you like to update?"
+                  field = gets.chomp
+                  puts "What would you like to update #{field} to?"
+                  update = gets.chomp
+                    if field == "age"
+                      update_age(db, name_input, update)
+                      puts return_user(db, name_input)
+                    elsif field == "phone number"
+                      update_phone(db, name_input, update)
+                      puts return_user(db, name_input)
+                    end
+                elsif do_this == "delete"
+                  puts "Whom would you like to delete?"
+                  name_input = gets.chomp
+                  delete_person(db, name_input)
+                  return_all(db)
+                elsif do_this == "add"
+                  puts "Please give me the name, age, and phone number of the addition (separated by commas)."
+                  addition = gets.chomp
+                  array = addition.split(',')
+                  info_parser(db, array)
+                  puts return_user(db, array[0])
+                end
+            elsif !change_to_make(do_this)
+              puts "I didn't understand you. Please type 'add', 'delete', or 'update'"
+            end
+          end
+        end
+    end
+end
 
+
+          #if !actual_contact(db, name_input) 
+          #  puts "I'm sorry, we don't have #{name_input} in the phonebook}. Would you like to add them or try again? ('add' 'try again')"
+          #  answer = gets.chomp
+          #  if answer == add
+          #    
+          #  end
