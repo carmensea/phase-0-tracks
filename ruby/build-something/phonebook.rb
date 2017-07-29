@@ -1,6 +1,7 @@
 #Operate Store Phone Numbers
 require 'sqlite3'
 require 'faker'
+require 'pry'
 
 
 #create SQLite3 database
@@ -32,8 +33,15 @@ def update_phone(db, name, update)
   db.execute("UPDATE phonebook SET phone=#{update} WHERE name='#{name}'")
 end
 
-def delete_person(db, name)
-  db.execute("DELETE FROM phonebook WHERE name='#{name}'")
+def delete_person(db)
+  puts "who would you like to delete?"
+  name = gets.chomp
+  if actual_contact(db, name)
+    db.execute("DELETE FROM phonebook WHERE name='#{name}'")
+    return_all(db)
+  else
+    puts "#{name} is not in your phonebook"
+  end
 end
 
 def info_parser(db, array)
@@ -45,6 +53,8 @@ end
 
 def add_person(db, name, age, phone)
   db.execute("INSERT INTO phonebook (name, age, phone) VALUES (?, ?, ?)", [name, age, phone])
+  puts return_user(db, name)
+  start_phonebook(db)
 end
 
 def actual_contact(db, name)
@@ -55,14 +65,15 @@ def actual_contact(db, name)
   end
 end
 
-#is user making a change?
-def start_phonebook(input)
-  if input == "yes"
-    true 
-  elsif input == "no"
-    true
-  else 
-    false
+def return_user(db, name_input)
+  user = db.execute("SELECT * from phonebook WHERE name =?", name_input)
+  puts "#{user[0][1]} is #{user[0][2]} and the phone number is #{user[0][3]}"
+end
+
+def return_all(db)
+  all_users = db.execute("SELECT * FROM phonebook")
+  all_users.each do |user, info|
+    puts "#{user['name']} is #{user['age']} and the phone number is #{user['phone']}"
   end
 end
 
@@ -82,97 +93,121 @@ end
 #  create_people(db, Faker::Name.name, Faker::Number.between(19, 90), Faker::Number.number(10))
 #end
 
-#DRIVER CODE
-def return_user(db, name_input)
-  user = db.execute("SELECT * from phonebook WHERE name =?", name_input)
-  puts "#{user[0][1]} is #{user[0][2]} and the phone number is #{user[0][3]}"
-end
-
-def return_all(db)
-  all_users = db.execute("SELECT * FROM phonebook")
-  all_users.each do |user, info|
-    puts "#{user['name']} is #{user['age']} and the phone number is #{user['phone']}"
-  end
-end
-
 def in_database(db, name_input)
   all_users = db.execute("SELECT * FROM phonebook")
   all_users.each do |user, info|
     if user['name'] == name_input
      return true
+    end
+  end
+  false
+end
+
+def change_decider(db)
+  correct_answer = false
+  until correct_answer
+    puts "What would you like to do (add/delete/update)?"
+    change = gets.chomp
+    if change == "add"
+      correct_answer = true
+      add_info(db)
+    elsif change == "update"
+      correct_answer = true
+      update_user(db)
+    elsif change == "delete"
+      correct_answer = true
+      delete_person(db)
     else
-      return false
+      puts "I didn't get that, type 'add', 'delete', 'update'"
     end
   end
 end
 
-#set condition 
-done_changes = false 
-#Until the user says they are done making changes
-until done_changes
-#Ask user if they want to make a change to their contacts?
-  return_all(db)
-  puts "Would you like to make a change?"
-  input = gets.chomp
-    if !start_phonebook(input)
-      puts "I didn't understand you"
-    elsif start_phonebook(input)
-        if input == "no"
-          puts "Glad I could help!"
-          done_changes = true
-        else
-          second_condition = false
-          until second_condition 
-            puts "What would you like to do (add/delete/update)?"
-            do_this = gets.chomp
-            if change_to_make(do_this)
-              second_condition = true
-                if do_this == "update"
-                  puts "Whom would you like to update?"
-                  name_input = gets.chomp
-                    if in_database(db, name_input)
-                      puts "What would you like to update?"
-                      field = gets.chomp
-                      puts "What would you like to update #{field} to?"
-                      update = gets.chomp
-                        if field == "age"
-                          update_age(db, name_input, update)
-                          puts return_user(db, name_input)
-                        elsif field == "phone number"
-                          update_phone(db, name_input, update)
-                          puts return_user(db, name_input)
-                        end
-                    else
-                      puts "I'm sorry, that name is not in our database."
-                    end
-                elsif do_this == "delete"
-                  puts "Whom would you like to delete?"
-                  name_input = gets.chomp
-                  if in_database(db, name_input)
-                    delete_person(db, name_input)
-                    return_all(db)
-                  else
-                    puts "I'm sorry, that name doesn't exist"
-                  end
-                elsif do_this == "add"
-                  puts "Please give me the name, age, and phone number of the addition (separated by commas)."
-                  addition = gets.chomp
-                  array = addition.split(',')
-                  info_parser(db, array)
-                  puts return_user(db, array[0])
-                end
-            elsif !change_to_make(do_this)
-              puts "I didn't understand you. Please type 'add', 'delete', or 'update'"
-            end
-          end
-        end
+def add_info(db)
+  puts "Please give me the name, age, and phone number of the addition (separated by commas)."
+  new_user = gets.chomp
+  split_to_add(new_user, db)
+end
+
+def split_to_add(addition, db)
+  array = addition.split(',')
+  info_parser(db, array)
+end
+
+def start_phonebook(db)
+  correct_answer = false
+  until correct_answer
+    puts "would you like to make a change?"
+    input = gets.chomp
+    if input == "yes"
+      correct_answer = true
+      change_decider(db)
+      true 
+    elsif input == "no"
+      correct_answer = true
+      puts "Glad I could help!"
+      true
+    else 
+      false
     end
+  end
+end
+
+def delete_info
+  puts "Whom would you like to delete?"
+  name_input = gets.chomp
+  if in_database(db, name_input)
+    delete_person(db, name_input)
+    return_all(db)
+    start_phonebook(db)
+  else
+    puts "I'm sorry, that name doesn't exist"
+  end
+end
+
+def update_user(db)
+  correct_answer = false
+  until correct_answer
+    puts "Whom would you like to update?"
+    name_input = gets.chomp
+    if in_database(db, name_input)
+      correct_answer = true
+      second_condition = false
+      until second_condition
+        puts "What would you like to update?"
+        field = gets.chomp
+        if field == "age"
+          second_condition = true
+          age(db, name_input)
+        elsif field == "phone number"
+          second_condition = true
+          phone(db, name_input)
+        else
+          puts "I'm sorry, that's not a field you can populate"
+        end
+      end
+    else
+      puts "I'm sorry, that name is not in our database."
+    end
+  end
+end
+
+def age(db, name_input)
+  puts "What would you like to update age to?"
+  update = gets.chomp
+  update_age(db, name_input, update)
+  puts return_user(db, name_input)
+  start_phonebook(db)
+end
+
+def phone(db, name_input)
+  puts "What would you like to update phone number to?"
+  update = gets.chomp
+  update_phone(db, name_input, update)
+  puts return_user(db, name_input)
+  start_phonebook(db)
 end
 
 
-          #if !actual_contact(db, name_input) 
-          #  puts "I'm sorry, we don't have #{name_input} in the phonebook}. Would you like to add them or try again? ('add' 'try again')"
-          #  answer = gets.chomp
-          #  if answer == add
-          #    
-          #  end
+#DRIVER CODE
+start_phonebook(db)
