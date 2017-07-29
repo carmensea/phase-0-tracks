@@ -77,18 +77,6 @@ def return_all(db)
   end
 end
 
-def change_to_make(input)
-  if input == "add"
-    true
-  elsif input == "delete"
-    true
-  elsif input == "update"
-    true
-  else
-    false
-  end
-end
-
 #10.times do
 #  create_people(db, Faker::Name.name, Faker::Number.between(19, 90), Faker::Number.number(10))
 #end
