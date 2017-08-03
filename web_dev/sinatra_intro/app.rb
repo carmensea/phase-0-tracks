@@ -10,6 +10,10 @@ db.results_as_hash = true
 # GET /
 get '/' do
   "#{params[:name]} is #{params[:age]} years old."
+  student = db.execute("SELECT * FROM students WHERE campus=?",
+                        [params[:search]])[2] 
+  student.to_s
+  
 end
 
 # write a GET route with
@@ -36,6 +40,27 @@ get '/students' do
   end
   response
 end
+
+get '/contact' do
+  "<h1>Contact us at contact@contact.com</h1>"
+end
+
+get '/great_job' do
+  name = params[:name]
+  if name 
+    "Great job, #{name}!"
+  else
+    "Good job!"
+  end
+end
+
+get '/:num1/:num2' do 
+  num1 = params[:num1].to_i
+  num2 = params[:num2].to_i
+  answer = num1 + num2
+  "#{answer}"
+end
+
 
 # write a GET route that retrieves
 # a particular student
